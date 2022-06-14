@@ -28,4 +28,4 @@
 `npm run dev` — запускает сервер с hot-reload
 
 ## Ссылка на репозиторий 
-(https://github.com/iskra273/express-mesto-gha/)
+https://github.com/iskra273/express-mesto-gha/

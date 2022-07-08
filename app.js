@@ -27,8 +27,8 @@ app.use((req, res, next) => {
 app.use('/', usersRouter);
 app.use('/', cardsRouter);
 
-// app.use((req, res) => {
-//   res.status(404).send({ message: 'Не найден' });
-// });
+app.use((req, res) => {
+  res.status(404).send({ message: 'Не найден' });
+});
 
 app.listen(PORT);

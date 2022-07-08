@@ -4,7 +4,7 @@ const Card = require('../models/card');
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => {
-      res.status.send({ data: cards });
+      res.send({ data: cards });
     })
     .catch(() => {
       res.status(500).send({ message: 'Ошибка сервера' });
@@ -14,9 +14,13 @@ module.exports.getCards = (req, res) => {
 // создает карточку
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
-  const owner = req.user._id;
+  const id = req.user._id;
 
-  Card.create({ name, link, owner })
+  Card.create({
+    name,
+    link,
+    owner: id,
+  })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {

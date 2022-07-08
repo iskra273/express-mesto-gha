@@ -3,8 +3,8 @@ const Card = require('../models/card');
 // возвращает все карточки
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .then((card) => {
-      res.status.send({ data: card });
+    .then((cards) => {
+      res.status.send({ data: cards });
     })
     .catch(() => {
       res.status(500).send({ message: 'Ошибка сервера' });
@@ -14,13 +14,13 @@ module.exports.getCards = (req, res) => {
 // создает карточку
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
-  const id = req.user._id;
+  const owner = req.user._id;
 
-  Card.create({ name, link, owner: id })
+  Card.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(404).send({ message: 'Некорректные данные' });
+        res.status(400).send({ message: 'Некорректные данные' });
       } else {
         res.status(500).send({ message: 'Ошибка сервера' });
       }
@@ -62,7 +62,7 @@ module.exports.likeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.path === '_id') {
-        res.status(404).send({ message: 'Некорректный ID' });
+        res.status(400).send({ message: 'Некорректный ID' });
       } else {
         res.status(500).send({ message: 'Ошибка сервера' });
       }
@@ -85,7 +85,7 @@ module.exports.dislikeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.path === '_id') {
-        res.status(404).send({ message: 'Некорректный ID' });
+        res.status(400).send({ message: 'Некорректный ID' });
       } else {
         res.status(500).send({ message: 'Ошибка сервера' });
       }

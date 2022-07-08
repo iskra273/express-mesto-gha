@@ -61,7 +61,7 @@ module.exports.updateProfile = (req, res) => {
       if (err.path === '_id') {
         res.status(400).send({ message: 'Некорректный ID' });
       } else if (err.name === 'ValidationError') {
-        res.status(404).send({ message: 'Некорректные данные' });
+        res.status(400).send({ message: 'Некорректные данные' });
       } else {
         res.status(500).send({ message: 'Ошибка сервера' });
       }

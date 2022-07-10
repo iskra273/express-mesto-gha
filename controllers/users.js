@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const { NOT_FOUND, SERVER_ERROR, BAD_REQUEST } = require('../errors/errors');
 
 // возвращает всех пользователей
 module.exports.getUsers = (req, res) => {
@@ -7,7 +8,7 @@ module.exports.getUsers = (req, res) => {
       res.send({ data: users });
     })
     .catch(() => {
-      res.status(500).send({ message: 'Ошибка сервера' });
+      res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
     });
 };
 
@@ -16,15 +17,16 @@ module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        res.status(404).send({ message: 'Пользователь не найден' });
+        res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
+        return;
       }
       res.send({ data: user });
     })
     .catch((err) => {
       if (err.path === '_id') {
-        res.status(400).send({ message: 'Некорректный ID' });
+        res.status(BAD_REQUEST).send({ message: 'Некорректный ID' });
       } else {
-        res.status(500).send({ message: 'Ошибка сервера' });
+        res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };
@@ -39,9 +41,9 @@ module.exports.createUser = (req, res) => {
     // если данные не записались, вернём ошибку
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Некорректные данные' });
+        res.status(BAD_REQUEST).send({ message: 'Некорректные данные' });
       } else {
-        res.status(500).send({ message: 'Ошибка сервера' });
+        res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };
@@ -53,17 +55,18 @@ module.exports.updateProfile = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        res.status(404).send({ message: 'Пользователь не найден' });
+        res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
+        return;
       }
       res.send({ data: user });
     })
     .catch((err) => {
       if (err.path === '_id') {
-        res.status(400).send({ message: 'Некорректный ID' });
+        res.status(BAD_REQUEST).send({ message: 'Некорректный ID' });
       } else if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Некорректные данные' });
+        res.status(BAD_REQUEST).send({ message: 'Некорректные данные' });
       } else {
-        res.status(500).send({ message: 'Ошибка сервера' });
+        res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };
@@ -75,17 +78,18 @@ module.exports.updateAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        res.status(404).send({ message: 'Пользователь не найден' });
+        res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
+        return;
       }
       res.send({ data: user });
     })
     .catch((err) => {
       if (err.path === '_id') {
-        res.status(400).send({ message: 'Некорректный ID' });
+        res.status(BAD_REQUEST).send({ message: 'Некорректный ID' });
       } else if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Некорректные данные' });
+        res.status(BAD_REQUEST).send({ message: 'Некорректные данные' });
       } else {
-        res.status(500).send({ message: 'Ошибка сервера' });
+        res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };

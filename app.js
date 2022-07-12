@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
+const { login, createUser } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 
@@ -15,20 +17,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
-// авторизация временно
-app.use((req, res, next) => {
-  req.user = {
-    _id: '62c6c8cf9e67cf21d119f706',
-  };
+app.post('/signin', login);
+app.post('/signup', createUser);
+app.use('/', auth, usersRouter);
+app.use('/', auth, cardsRouter);
 
-  next();
-});
-
-app.use('/', usersRouter);
-app.use('/', cardsRouter);
-
-app.use((req, res) => {
-  res.status(404).send({ message: 'Не найден' });
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? 'Ошибка сервера'
+        : message,
+    });
 });
 
 app.listen(PORT);

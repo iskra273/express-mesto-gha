@@ -21,13 +21,14 @@ usersRouter.get('/users/:userId', celebrate({
 }), getUser);
 
 usersRouter.patch('/users/me', celebrate({
-  params: Joi.object().keys({
+  body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
   }),
 }), updateProfile);
+
 usersRouter.patch('/users/me/avatar', celebrate({
-  params: Joi.object().keys({
+  body: Joi.object().keys({
     avatar: Joi.string().required().pattern(regular),
   }),
 }), updateAvatar);

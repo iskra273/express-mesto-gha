@@ -4,7 +4,6 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const ConflictError = require('../errors/ConflictError');
-const UnauthorizedError = require('../errors/UnauthorizedError');
 
 // возвращает всех пользователей
 module.exports.getUsers = (req, res, next) => {
@@ -46,6 +45,7 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Данные некорректны'));
+        return;
       }
       if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже существует'));
@@ -126,7 +126,5 @@ module.exports.login = (req, res, next) => {
       // вернём токен
       res.send({ token });
     })
-    .catch(() => {
-      next(new UnauthorizedError('Неверный пароль или email'));
-    });
+    .catch(next);
 };

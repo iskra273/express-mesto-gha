@@ -2,8 +2,6 @@ const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const ForbiddenError = require('../errors/ForbiddenError');
-// const UnauthorizedError = require('../errors/UnauthorizedError');
-// const ConflictError = require('../errors/ConflictError');
 
 // возвращает все карточки
 module.exports.getCards = (req, res, next) => {
@@ -44,9 +42,8 @@ module.exports.deleteCard = (req, res, next) => {
       if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Недостаточно прав для удаления карточки');
       }
-      Card.findByIdAndRemove(req.params.cardId)
-        .then(() => res.status(200).send({ data: card }))
-        .catch(next);
+      card.remove();
+      res.status(200).send({ data: card });
     })
     .catch(next);
 };

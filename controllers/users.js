@@ -43,12 +43,11 @@ module.exports.createUser = (req, res, next) => {
     }))
     // возвращаем записанные в базу данные пользователю
     .then(() => res.status(201).send({ name, about, avatar }))
-    // если данные не записались, вернём ошибку
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Данные некорректны'));
       }
-      if (err.code === 1100) {
+      if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже существует'));
         return;
       }

@@ -34,10 +34,29 @@ const validateCardId = celebrate({
   }),
 });
 
+const validateLogin = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+});
+
+const validateCreateUser = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(regular),
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }),
+});
+
 module.exports = {
   validateUserId,
   validateUser,
   validateAvatar,
   validateCard,
   validateCardId,
+  validateLogin,
+  validateCreateUser,
 };
